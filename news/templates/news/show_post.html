@@ -1,0 +1,130 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Incredible News! - {{ post.title }}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="{% static 'css/ie10-viewport-bug-workaround.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body class="show-post-page">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="{% url "news:list_posts" %}">Incredible News!</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1>
+            {{ post.title }}<br>
+            <small>{{ post.author }}</small>
+          </h1>
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-primary">
+            <div class="panel-body">
+
+              {% if post.image %}
+                <img class="post-image"
+                     src="{{ post.image.url }}" />
+              {% endif %}
+              <p class="post-body">{{ post.body|linebreaksbr }}</p>
+
+              <p class="pub-date">Published on: {{ post.pub_date }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">Comments</h3>
+            </div>
+
+            <ul class="list-group">
+              {% for comment in post.comment_set.all %}
+               <li class="list-group-item">
+                 <h5 class="comment-header">On {{ comment.pub_date }}, <b>{{ comment.author }}</b> said:</h5>
+                 <p>{{ comment.body|linebreaksbr }}</p>
+               </li>
+              {% empty %}
+                <li class="list-group-item">
+                  <h5 class="comment-header">No one has commented on this post yet.</h5>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Add your comment</h3>
+          </div>
+          <div class="panel-body">
+            <form method="post" action="{% url 'news:comment' post.id %}">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="commentAuthor">Your Name</label>
+                <input type="text" class="form-control" id="commentAuthor" name="author" required>
+              </div>
+              <div class="form-group">
+                <label for="commentBody">Your Comment</label>
+                <textarea rows="3" class="form-control" id="commentBody" name="body" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+          </div>
+        </div>
+
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; 2016 Student Club Academy</p>
+      </footer>
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+  </body>
+</html>
+
